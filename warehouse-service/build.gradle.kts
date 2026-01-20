@@ -15,6 +15,7 @@ repositories.mavenCentral()
 dependencies {
     implementation("io.nats:jnats:2.16.14")
     implementation("ch.qos.logback:logback-classic:1.5.25")
+//    implementation("com.fasterxml.jackson.core:jackson-databind:2.21.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testImplementation("org.mockito:mockito-core:5.7.0")
