@@ -49,11 +49,11 @@ public class IntegrationTest {
         CountDownLatch messagesLatch = new CountDownLatch(msgCount);
         List<String> receivedMessages = new ArrayList<>();
 
-        Dispatcher d = connection.createDispatcher((msg) -> {
+        Dispatcher dispatcher = connection.createDispatcher((msg) -> {
             receivedMessages.add(new String(msg.getData(), StandardCharsets.UTF_8));
             messagesLatch.countDown();
         });
-        d.subscribe(configuration.messageTopic());
+        dispatcher.subscribe(configuration.messageTopic());
 
         List<String> sentMessages = new ArrayList<>();
         Random random = new Random();
