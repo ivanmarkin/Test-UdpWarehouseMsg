@@ -16,6 +16,8 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.20.0")
     implementation("io.nats:jnats:2.16.14")
     implementation("ch.qos.logback:logback-classic:1.5.25")
+//    implementation("com.typesafe.akka:akka-slf4j_2.13:2.8.5")
+//    implementation("org.slf4j:slf4j-api:2.0.13")
 
     implementation("com.typesafe.akka:akka-actor_2.13:2.8.5")
     implementation("com.typesafe.akka:akka-stream_2.13:2.8.5")
@@ -32,4 +34,6 @@ tasks.test {
 
 tasks.shadowJar {
     manifest.attributes("Main-Class" to "net.ivm.lab.warehouse.central.CentralServiceApp")
+    mergeServiceFiles()
+    append("reference.conf")
 }
