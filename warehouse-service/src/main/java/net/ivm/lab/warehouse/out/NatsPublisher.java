@@ -38,11 +38,6 @@ public class NatsPublisher {
     public void publish(String message) {
 //            String json = objectMapper.writeValueAsString(data);
 //            jetStream.publish(SensorData.MESSAGE_TOPIC, json.getBytes());
-        jetStream.publishAsync(messageTopic, message.getBytes()).thenAccept(pubAck -> {
-            System.out.println("Published successfully: " + pubAck);
-        }).exceptionally(e -> {
-            log.error("Publish failed: {}", e.getMessage());
-            return null;
-        });
+        jetStream.publishAsync(messageTopic, message.getBytes());
     }
 }
