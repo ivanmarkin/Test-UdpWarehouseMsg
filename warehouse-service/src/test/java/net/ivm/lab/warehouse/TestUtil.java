@@ -1,11 +1,14 @@
 package net.ivm.lab.warehouse;
 
+import net.ivm.lab.warehouse.server.Configuration;
+import net.ivm.lab.warehouse.server.ConfigurationFactory;
+
 import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 
 public class TestUtil {
-    private static final Configuration defaultLocalConfiguration = Configuration.defaultLocalhost();
+    private static final Configuration defaultLocalConfiguration = ConfigurationFactory.defaultLocalhost();
 
     public static Configuration testConfiguration() {
         return new Configuration(10444, 10445, defaultLocalConfiguration.messageBrokerUrl(), "RealIntegrationTestWarehouseTopic");

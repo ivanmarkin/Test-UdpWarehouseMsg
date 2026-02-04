@@ -3,6 +3,8 @@ package net.ivm.lab.warehouse;
 import io.nats.client.Connection;
 import io.nats.client.Dispatcher;
 import io.nats.client.Nats;
+import net.ivm.lab.warehouse.server.Configuration;
+import net.ivm.lab.warehouse.server.WarehouseService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

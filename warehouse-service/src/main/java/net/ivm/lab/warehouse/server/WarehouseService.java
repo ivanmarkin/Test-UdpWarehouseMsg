@@ -1,21 +1,20 @@
-package net.ivm.lab.warehouse;
+package net.ivm.lab.warehouse.server;
 
-import net.ivm.lab.warehouse.in.UdpServerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WarehouseService {
     private static final Logger log = LoggerFactory.getLogger(WarehouseService.class);
 
-    private final UdpServerContext udpServerContext;
+    private final ServerContext serverContext;
 
     public WarehouseService(Configuration configuration) {
-        this.udpServerContext = new UdpServerContext(configuration);
+        this.serverContext = new ServerContext(configuration);
     }
 
     public void start() {
-        udpServerContext.udpTemperatureListener().start();
-        udpServerContext.udpHumidityListener().start();
+        serverContext.udpTemperatureListener().start();
+        serverContext.udpHumidityListener().start();
 
         log.info("WarehouseService started");
 
