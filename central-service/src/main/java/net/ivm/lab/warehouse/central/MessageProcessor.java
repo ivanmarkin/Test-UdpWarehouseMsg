@@ -14,15 +14,12 @@ import net.ivm.lab.warehouse.util.MessageConverter;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static net.ivm.lab.warehouse.central.CentralService.*;
-
 public class MessageProcessor extends AbstractActor {
-    static final String START_MESSAGE_PROCESSOR = "StartMessageProcessor";
-
     private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
     private final AtomicBoolean started = new AtomicBoolean(false);
     private ThresholdSettings thresholdSettings;
+    private MessageBrokerSettings mbs;
 
     private Connection natsConnection;
     private Dispatcher natsDispatcher;
@@ -30,22 +27,23 @@ public class MessageProcessor extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .matchEquals(START_MESSAGE_PROCESSOR, msg -> start())
+                .match(MessageProcessorStart.class, this::start)
                 .build();
     }
 
-    private void start() {
+    private void start(MessageProcessorStart msg) {
         if (started.get()) {
             log.warning("MessageProcessor {} already started", this);
             return;
         }
 
         try {
-            natsConnection = Nats.connect(NATS_URL);
-            natsDispatcher = natsConnection.createDispatcher(this::processNatsMessage);
-            natsDispatcher.subscribe(TOPIC_NAME, QUEUE_GROUP);
+            thresholdSettings = msg.thresholdSettings();
+            mbs = msg.messageBrokerSettings();
 
-            thresholdSettings = new ThresholdSettings(TH_TEMPERATURE, TH_HUMIDITY);
+            natsConnection = Nats.connect(mbs.brokerUrl());
+            natsDispatcher = natsConnection.createDispatcher(this::processNatsMessage);
+            natsDispatcher.subscribe(mbs.sensorDataTopic(), mbs.sensorDataQueueGroup());
 
             started.set(true);
             log.info("MessageProcessor {} started", this);
@@ -77,7 +75,7 @@ public class MessageProcessor extends AbstractActor {
     private void clearConnection() {
         try {
             if (natsDispatcher != null) {
-                natsDispatcher.unsubscribe(TOPIC_NAME);
+                natsDispatcher.unsubscribe(mbs.sensorDataTopic());
             }
             if (natsConnection != null) {
                 natsConnection.close();
